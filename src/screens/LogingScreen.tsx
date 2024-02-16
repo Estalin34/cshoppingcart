@@ -4,14 +4,14 @@ import { StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { ERROR_COLOR, PRIMARY_COLOR } from '../comomns/ConstantsColor';
 import { stylesGlobal } from '../theme/appytheme';
 import { User } from '../navigator/StackNavigator';
-import { showSnackBar, verifyExistUser } from '../comomns/AuthValidations';
+import { hasErrorFormLogin, showSnackBar, verifyEistUser } from '../comomns/AuthValidations';
 import { InputComponents } from '../components/InputComponents';
 import { ButtonComponents } from '../components/ButtonComponents';
 import { BodyComponents } from '../components/BodyComponents';
 import { TitleComnponents } from '../components/TitleComnponents';
 
 
-export interface UserForm{
+export interface LoginFrom{
   username: string;
   password: string;
   hasError: boolean;
@@ -28,7 +28,7 @@ export const LogingScreen = ({users}:LoginProps) => {
  const navigation=useNavigation();
 
   //Hook - control de los datos en el form
-  const[form, setForm]=useState<UserForm>({
+  const[form, setForm]=useState<LoginFrom>({
     username:'',
     password:'',
     hasError: false,
@@ -53,7 +53,7 @@ export const LogingScreen = ({users}:LoginProps) => {
   //Funcion que envie los datos del formulario
   const handlerSendInfo=()=>{
   //Validar formulario
-  if(hasErrorForm(form) ){ 
+  if(hasErrorFormLogin(form) ){ 
     setForm(prevState=>({
       ...prevState,
       hasError:true
@@ -65,18 +65,15 @@ export const LogingScreen = ({users}:LoginProps) => {
     ...prevState,
     hasError:false
   }))
-  function hasErrorForm(_form: UserForm) {
-    throw new Error('Function not implemented.');
-  }
-    
-
+   
   // llamar función que verifica si el usuario existe en el arreglo
-  const existUser=verifyExistUser(users,form);
+  const existUser=verifyEistUser(users,form);
   if(!existUser || existUser.password != form.password){
     showSnackBar("Usuario y/o contraseña incorrecta!", ERROR_COLOR);
     return;
   }
-  console.log(form);
+  // console.log(form);
+  navigation.dispatch(CommonActions.navigate({name:'HomeScreen'}));
 }
 
   return (
@@ -102,7 +99,6 @@ export const LogingScreen = ({users}:LoginProps) => {
                 onChangeText={(numero:string)=>setNumero(parseInt(numero))}/> */}
           </View>
           <ButtonComponents title='Iniciar Sesión' onPress={handlerSendInfo}/>
-
           <TouchableOpacity 
             onPress={()=>navigation.dispatch(CommonActions.navigate({name:'RegisterScreen'}))}>
             <Text style={stylesGlobal.textNavigation}>No tienes una cuenta? Regístrate ahora!</Text>
@@ -110,10 +106,5 @@ export const LogingScreen = ({users}:LoginProps) => {
         </BodyComponents>
     </View>
   )
-}
-
-
-function hasErrorForm(_form: UserForm) {
-  throw new Error('Function not implemented.');
 }
 

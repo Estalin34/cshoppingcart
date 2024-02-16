@@ -1,19 +1,20 @@
 import Snackbar from "react-native-snackbar";
 import { User } from "../navigator/StackNavigator";
-import { UserForm } from "../screens/RegisterScreen";
+import { LoginFrom } from '../screens/LogingScreen';
+import { RegisterForm } from "../screens/RegisterScreen";
 
 
-
-//Función para verificar si existe campos vacios
-export const hasErrorForm=(form: UserForm)=>{
-    return form.username == '' || form.password == '';
+export const hasErrorFormLogin=(form:LoginFrom)=>{
+    return form.username === '' || form.password === ''
+}
+export const hasErrorFormRegister=(form:RegisterForm)=>{
+  return form.email=== '' || form.password === '' || form.username === ''
 }
 
-//Función para verificar si existe el usuario registrado
-export const verifyExistUser=(users: User[], form: UserForm)=>{
-    return users.filter(user=>user.username == form.username)[0];
+// funcionn pra verificar si el usuario existe
+export const verifyEistUser=(user :User[], form:LoginFrom)=>{
+    return user.filter( user => user.username === form.username && user.password === form.password)[0]
 }
-
 //Función para que el snackbar sea reutilizable
 export const showSnackBar =(message: string, background: string)=>{
     Snackbar.show({

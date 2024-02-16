@@ -3,14 +3,15 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ERROR_COLOR, PRIMARY_COLOR } from '../comomns/ConstantsColor'
 import { TitleComnponents } from '../components/TitleComnponents'
-import { getIdNewUser, hasErrorForm, showSnackBar, verifyExistUser } from '../commons/AuthValidations';
 import { InputComponents } from '../components/InputComponents'
 import { stylesGlobal } from '../theme/appytheme'
 import { BodyComponents } from '../components/BodyComponents'
 import { User } from '../navigator/StackNavigator'
+import { getIdNewUser, hasErrorFormRegister, showSnackBar, verifyEistUser } from '../comomns/AuthValidations'
 
-export interface UserForm{
+export interface RegisterForm{
   username: string;
+  email: string;
   password: string;
   hasError: boolean;
 }
@@ -29,8 +30,9 @@ export const RegisterScreen = ({usersLogin, setUsersLogin}:RegisterProps) => {
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
   //Hook - control de los datos en el form
-  const[form, setForm]=useState<UserForm>({
+  const[form, setForm]=useState<RegisterForm>({
     username:'',
+    email:'',
     password:'',
     hasError: false,
   });
@@ -38,7 +40,7 @@ export const RegisterScreen = ({usersLogin, setUsersLogin}:RegisterProps) => {
   //Función para guardar los usuarios
   const handlerSaveUser=()=>{
   //Validar formulario
-  if(hasErrorForm(form)){ 
+  if(hasErrorFormRegister(form)){ 
     setForm(prevState=>({
       ...prevState,
       hasError:true
@@ -50,7 +52,7 @@ export const RegisterScreen = ({usersLogin, setUsersLogin}:RegisterProps) => {
     hasError:false
   }))
 
-  const existUser=verifyExistUser(usersLogin, form);
+  const existUser=verifyEistUser(usersLogin, form);
   if(existUser){
     showSnackBar("El usuario ya se encuentra registrado", ERROR_COLOR)
     return;
@@ -60,9 +62,9 @@ export const RegisterScreen = ({usersLogin, setUsersLogin}:RegisterProps) => {
   const newUser:User={
     id: getIdNewUser(usersLogin),
     ...form
-  }
+  };
 
-  //agregar el nuevo usario en el arreglo de usersLogin
+  //agregar el nuevo usuario en el arreglo de usersLogin
   setUsersLogin(newUser)
   showSnackBar("Usuario registrado con éxito!", PRIMARY_COLOR)
   
@@ -86,12 +88,17 @@ export const RegisterScreen = ({usersLogin, setUsersLogin}:RegisterProps) => {
           <Text style={stylesGlobal.textDescription}>Realiza tus compras de manera rápida y segura</Text>
           <View style={stylesGlobal.containerForm}>
             <InputComponents 
-              placeholder='Usuario'
+              placeholder='Correo Electrónico'
+              onChangeText={handlerChangeText}
+              name={'email'}
+              hasError={form.hasError}/>
+              <InputComponents 
+              placeholder='usuario'
               onChangeText={handlerChangeText}
               name={'username'}
               hasError={form.hasError}/>
             <InputComponents
-              placeholder='Password'
+              placeholder='password'
               onChangeText={handlerChangeText}
               name={'password'}
               isPassword={hiddenPassword}

@@ -2,7 +2,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { LogingScreen } from '../screens/LogingScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import  { useState } from 'react';
-import { PRIMARY_COLOR } from '../comomns/ConstantsColor';
+import {PRIMARY_COLOR} from '../comomns/ConstantsColor';
+import { HomeScreen } from '../screens/HomeScreen';
 
 
 //Data de prueba
@@ -38,6 +39,7 @@ export const StackNavigator=()=> {
         >
       <Stack.Screen name="LoginScreen" options={{headerShown:false}} children={()=><LogingScreen users={usersLogin}/>}/>
       <Stack.Screen name="RegisterScreen" options={{headerShown:false}} children={()=><RegisterScreen usersLogin={usersLogin} setUsersLogin={handlerAddUser}/>} />
+      <Stack.Screen name="HomeScreen" options={{headerShown: false}} component={HomeScreen} />
     </Stack.Navigator>
   );
 }
